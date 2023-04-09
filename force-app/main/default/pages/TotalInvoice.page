@@ -1,0 +1,344 @@
+<apex:page 
+    controller="TotalInvoiceController" 
+    cache="false" 
+    showHeader="false" 
+    sidebar="false" 
+    renderas="pdf" 
+    applyHtmlTag="false"
+    applyBodyTag="false"
+    >
+    
+    <head>
+        <style type="text/css" media="print">
+
+            @page {
+                @top-center {
+                    content: element(header);
+                }
+
+                @bottom-center {
+                    content: element(footer);
+                }
+                size: A4;
+                margin: 24em 0 11em 0;
+                width: 100%;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: sans-serif;
+                font-size: 12px;
+            }
+
+            .tableProducts__tableHeader_repeate {
+                -fs-table-paginate: paginate;
+            }
+
+            .countPage {
+                position: absolute;
+                color: #1f3764;
+                font-style: italic;
+                font-weight: bold;
+                right: 10px;
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            .header {
+                padding: 10px;
+                position: running(header);
+            }
+
+            .header__red-line {
+                background-color: #ff5721;
+                height: 20px;
+                width: 100%;
+            }
+
+            .header__company-info {
+                background: #f3f3f3;
+                height: 200px;
+            }
+
+                    .company-info__logo {
+                        height: 65px;
+                        width: 65px;
+                    }
+
+                    .company-info__name {
+                        font-size: 18px;
+                    }
+
+                    .company-info__table {
+                        width: 100%;
+                        padding: 35px 0 0 35px;
+                        margin: 0 0 10px 0;
+                    }
+
+                    .company-info__invoice {
+                        font-size: 20px;
+                        color: #7f7f7f;
+                        text-align: right;
+                        padding-right: 50px;
+                    }
+
+            .header__date-invoiceNum {
+                position: relative;
+            }
+
+                    .header__date-invoiceNum p {
+                        position: absolute;
+                        width: 125px;
+                        font-weight: bold;
+                        color: #1f3764;
+                        padding: 5px 0;
+                        text-align: center;
+                        float: right;
+                        border-bottom: 1px solid #c5c5c5;
+                    }
+
+                    .date-invoiceNum__date {
+                        top: 0;
+                        right: 30px;
+                    }
+
+                    .date-invoiceNum__invoiceNum {
+                        top: 30px;
+                        right: 30px;
+                    }
+
+            .bill-to {
+                padding: 0px 30px 0px;
+            }
+
+                    .bill-to__title {
+                        text-transform: uppercase;
+                        border-bottom: 1.5px solid #c5c5c5;
+                        color: #1f3764;
+                        font-weight: bold;
+                        padding-bottom: 5px;
+                        margin-bottom: 5px;
+                    }
+            
+            .bill-info {
+                padding: 5px 0 5px 0;
+            }
+
+            .bill-info i {
+                margin-right: 5px;
+            }
+
+            .content {
+                position: sticky;
+                display: block !important;
+                padding: 35px 30px 0px;
+            }
+
+                    .content p {
+                        line-height: 25px;
+                    }
+
+                    .content__tableProducts {
+                        width: 100%;
+                        font-size: 10px;
+                        border-bottom: 1px solid #9f9f9f;
+                    }
+
+                            .column {
+                                padding: 0 5px 0 5px;
+                            }
+
+                            .tableProducts__header-table {
+                                background-color: #ff5721;
+                                border: 1px solid #ff5721;
+                                border-bottom: 1px solid #9f9f9f;
+                                text-align: center;
+                                text-transform: uppercase;
+                                color: #fff;
+                                height: 25px;
+                            }
+
+                            .tableProducts__product-name {
+                                text-align: left;
+                                width: 350px;
+                                border-right: 1px solid #9f9f9f;
+                                border-left: 1px solid #9f9f9f;
+                            }
+
+                            .tableProducts__quontity {
+                                text-align: center;
+                                width: 110px;
+                                border-right: 1px solid #9f9f9f;
+                            }
+
+                            .tableProducts__unit-price {
+                                text-align: right;
+                                width: 140px;
+                                border-right: 1px solid #9f9f9f;
+                            }
+
+                            .tableProducts__total {
+                                text-align: right;
+                                width: 120px;
+                                border-right: 1px solid #9f9f9f;
+                            }
+
+                            .tableProducts__row_white {
+                                background-color: #fff;
+                                height: 20px;
+                                text-align: center;
+                                border: 1px solid #9f9f9f;
+                            }
+
+                            .tableProducts__row_gray {
+                                background-color: #f3f3f3;
+                                height: 20px;
+                                text-align: center;
+                                border: 1px solid;
+                            }
+
+            .content__tableBalance {
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+                margin: 0 0 0 472px;
+            }
+
+                    .tableBalance__title {
+                        width: 140px;
+                        height: 45px;
+                        padding: 0 10px 0 5px;
+                        text-align: right;
+                    }
+
+                    .tableBalance__total {
+                        width: 120px;
+                        padding: 0 10px;
+                        background: #f4cccd;
+                        border-bottom: 1px solid #9f9f9f;
+                    }
+
+            .footer {
+                padding: 0 10px;
+                position: running(footer);
+            }
+
+            .footer__company-name {
+                background-color: #ff5721;
+                height: 20px;
+                text-align: center;
+                font-size: 14px;
+                line-height: 20px;
+                color: #fff;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="countPage">Page <span class="pagenumber"/> of <span class="pagecount"/></div>
+        <div class="header">
+            <div class="header__red-line"></div>
+            <div class="header__company-info">
+                <table class="company-info__table">
+                    <tr>
+                        <td>
+                            <div class="company-info__name">{!$Organization.Name}</div>
+                            <div>
+                                <span>{!$Organization.Street}</span>
+                                <span>{!$Organization.City}</span>
+                                <span>{!$Organization.State}</span>
+                                <span>{!$Organization.PostalCode}</span>
+                                <span>{!$Organization.Country}</span>
+                            </div>
+                            <div>
+                                <apex:repeat value="{!opportunity}" var="opp">
+                                    <apex:outputText value="{!opp.Owner.Name}" />
+                                </apex:repeat>
+                            </div>
+                        </td>
+                        <td class="company-info__invoice">INVOICE</td>
+                    </tr>
+                </table>
+
+                <div class="header__date-invoiceNum">
+                    <p class="date-invoiceNum__date">{!DAY(TODAY())}-{!MONTH(TODAY())}-{!YEAR(TODAY())}</p>
+                    <p class="date-invoiceNum__invoiceNum">
+                        <apex:repeat value="{!opportunity}" var="opp">
+                            <apex:outputText value="{!opp.Invoice_Number__c}" />
+                        </apex:repeat>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bill-to">
+            <p class="bill-to__title">BILL TO</p>
+                <apex:repeat value="{!contact}" var="cont">
+                    <p class="bill-to__client-name bill-info">
+                        <i>Name:</i> 
+                        <apex:outputText value="{!cont.Contact.Name}" />
+                    </p>
+                    <p class="bill-to__client-company-name bill-info">
+                        <i>Company Name:</i> 
+                        <apex:outputText value="{!cont.Contact.Account.Name}" />
+                    </p>
+                    <p class="bill-to__client-phone bill-info">
+                        <i>Phone:</i> 
+                        <apex:outputText value="{!cont.Contact.Phone}" />
+                    </p>
+                    <p class="bill-to__client-email bill-info">
+                        <i>Email:</i> 
+                        <apex:outputText value="{!cont.Contact.Email}" />
+                    </p>
+                </apex:repeat>
+        </div>
+
+        <div class="footer">
+            <div class="footer__company-name">{!$Organization.Name}</div>
+        </div>
+
+        <div class="content">
+
+            <apex:dataTable value="{!products}" id="theTable" var="product" rowClasses="tableProducts__row_white, tableProducts__row_gray" styleClass="content__tableProducts tableProducts__tableHeader_repeate">
+                <apex:column styleClass="tableProducts__product-name column" headerClass="tableProducts__header-table" headerValue="Product Name">
+                    <apex:outputText value="{!product.Product2.Name}" />
+                </apex:column>
+
+                <apex:column styleClass="tableProducts__quontity column" headerClass="tableProducts__header-table" headerValue="QTY">
+                    <apex:outputText value="{!product.Quantity}" />
+                </apex:column>
+
+                <apex:column styleClass="tableProducts__unit-price column" headerClass="tableProducts__header-table" headerValue="Unit Price">
+                    <apex:outputText value="{!product.UnitPrice}" />
+                </apex:column>
+
+                <apex:column styleClass="tableProducts__total column" headerClass="tableProducts__header-table" headerValue="Total">
+                    <apex:outputText value="{!product.TotalPrice}" />
+                </apex:column>
+            </apex:dataTable>
+
+            <apex:dataTable value="{!opportunity}" var="opp" styleClass="content__tableBalance">
+                <apex:column styleClass="tableBalance__title">
+                    <apex:outputText value="Balance Due" />
+                </apex:column>
+
+                <apex:column styleClass="tableBalance__total">
+                    <apex:outputText value="$ {!opp.Amount}" />
+                </apex:column>
+            </apex:dataTable>
+        </div>
+        
+    </body>
+
+</apex:page>

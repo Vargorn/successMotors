@@ -1,0 +1,16 @@
+.heder-block {
+    display: flex;
+    justify-content: flex-start;
+}
+.pageSizeControl {
+    display: inline-block;
+    width: 200px;
+    padding: 0px;
+}
+.search-box {
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+.acordion-box {
+    /* padding: 0 10px 0 10px; */
+}
